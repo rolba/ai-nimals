@@ -68,23 +68,26 @@ for (i, imagePath) in enumerate(os.listdir(datasetPath)):
                     box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                     (startX, startY, endX, endY) = box.astype("int")
                     crop_img = frame[startY:startY + (endY - startY), startX:startX + (endX - startX)]
+                    break
 
             # Let's do some padding! That helps achieving square images for training CNNs
             height, width, channels = crop_img.shape
-            print(height, width, channels)
 
             # Pad left and right side of image with zeros. Or...
             if height > width:
                 fillpix = int((height - width)/2)
-                crop_img2 = cv2.copyMakeBorder(crop_img, 0, 0, fillpix, fillpix, cv2.BORDER_CONSTANT, 0)
+                crop_img = cv2.copyMakeBorder(crop_img, 0, 0, fillpix, fillpix, cv2.BORDER_CONSTANT, 0)
 
             # ... pad top and bottom side of image with zeros.
             if height < width:
                 fillpix = int((width - height) / 2)
-                crop_img2 = cv2.copyMakeBorder(crop_img, fillpix, fillpix, 0, 0, cv2.BORDER_CONSTANT, 0)
+                crop_img = cv2.copyMakeBorder(crop_img, fillpix, fillpix, 0, 0, cv2.BORDER_CONSTANT, 0)
+
+            # Make vertical flip of cropped image. Will be need on classes verification script.
+            vertical_flip = cv2.flip(crop_img, 1)
 
             # Save image
-            cv2.imwrite(join(datasetPath, imagePath, "detected", str(n) + '.png'), crop_img2)
+            cv2.imwrite(join(datasetPath, imagePath, "detected", str(n) + '.png'), vertical_flip)
 
 # do a bit of cleanup
 cv2.destroyAllWindows()
