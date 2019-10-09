@@ -61,6 +61,7 @@ for (i, imagePath) in enumerate(os.listdir(datasetPath)):
                 # filter out weak detections by ensuring the `confidence` is
                 # greater than the minimum confidence
                 if confidence > confidence_threshold:
+
                     # extract the index of the class label from the
                     # `detections`, then compute the (x, y)-coordinates of
                     # the bounding box for the object
