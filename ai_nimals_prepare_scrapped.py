@@ -41,7 +41,7 @@ def padCroppedImage(crop_img):
 def findBirdInFrame(frame):
     # grab the frame dimensions and convert it to a blob
     (h, w) = frame.shape[:2]
-    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (600, 600)), 0.007843, (300, 300), 127.5)
+    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (600, 600)), 1, (300, 300), 127.5)
 
     # pass the blob through the network and obtain the detections and
     # predictions
