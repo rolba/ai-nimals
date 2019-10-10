@@ -10,8 +10,7 @@ prototxt = "MobileNetSSD_deploy.prototxt.txt"
 model = "MobileNetSSD_deploy.caffemodel"
 confidence_threshold = 0.7
 
-# initialize the list of class labels MobileNet SSD was trained to
-# detect, then generate a set of bounding box colors for each class
+# initialize the list of class labels MobileNet SSD was trained to detect
 CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
            "bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
            "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
