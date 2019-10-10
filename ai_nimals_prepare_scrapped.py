@@ -41,7 +41,7 @@ def padCroppedImage(crop_img):
 def findBirdInFrame(frame):
     # grab the frame dimensions and convert it to a blob
     (h, w) = frame.shape[:2]
-    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (600, 600)), 1, (300, 300), 127.5)
+    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (600, 600)), 0.007843, (300, 300), 127.5)
 
     # pass the blob through the network and obtain the detections and
     # predictions
@@ -65,6 +65,8 @@ def findBirdInFrame(frame):
             (startX, startY, endX, endY) = box.astype("int")
             crop_img = frame[startY:startY + (endY - startY), startX:startX + (endX - startX)]
             break
+        else:
+            return None
     return crop_img
 
 def main():
@@ -90,14 +92,16 @@ def main():
                 # Find one(!) bird on loaded image and crop it.
                 croppedImg = findBirdInFrame(frame)
 
-                # Pad cropped images with 0 to have square images for future processing
-                paddedCropImg = padCroppedImage(croppedImg)
+                # Check if bird was found :)
+                if croppedImg is not None:
+                    # Pad cropped images with 0 to have square images for future processing
+                    paddedCropImg = padCroppedImage(croppedImg)
 
-                # Make vertical flip of cropped image. I am working on verification feature so I will need this anyway
-                paddedCropImg = cv2.flip(paddedCropImg, 1)
+                    # Make vertical flip of cropped image. I am working on verification feature so I will need this anyway
+                    paddedCropImg = cv2.flip(paddedCropImg, 1)
 
-                # Save image
-                cv2.imwrite(join(datasetPath, imagePath, "detected", str(n) + '.png'), paddedCropImg)
+                    # Save image
+                    cv2.imwrite(join(datasetPath, imagePath, "detected", str(n) + '.png'), paddedCropImg)
 
     # do a bit of cleanup
     cv2.destroyAllWindows()
