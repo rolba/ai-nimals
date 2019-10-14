@@ -1,6 +1,7 @@
 import os
 import hashlib
 from os.path import join
+import cv2
 
 os.environ["PATH"] += os.pathsep + os.getcwd()
 
@@ -22,6 +23,11 @@ def getImgsHashs(datasetPath):
             # Construct image patch
             imgPath = join(imgDir, imgPath)
 
+            image = cv2.imread(imgPath)
+            resized_image = cv2.resize(image, (32, 32))
+            print(os.path.join(imgDir, str(j)+'_a.jpg'))
+            cv2.imwrite(os.path.join(imgDir, str(j)+'_a.jpg'), resized_image)
+
             # Prepare new md5 object from hashlib
             md5Hash = hashlib.md5()
 
@@ -29,7 +35,7 @@ def getImgsHashs(datasetPath):
             with open(imgPath, 'rb') as f:
 
                 # Start iterate over all bytes in image (read every 4096 bytes)
-                for chunk in iter(lambda: f.read(4096), b""):
+                for chunk in iter(lambda: f.read(32), b""):
 
                     # Update hash every 4096 bytes
                     md5Hash.update(chunk)
@@ -54,9 +60,12 @@ def delDuplicates(im, hs):
         if hashs.count(hs)>1:
 
             # Remove them from directory and from hashes and image directory lists
-            os.remove(img[0])
+            # os.remove(img[0])
             del(hashs[i])
             del(imgs[i])
+            print("deleted", imgs[i])
+        else:
+            print("NOPE", imgs[i])
     return imgs, hashs
 
 
