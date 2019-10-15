@@ -1,16 +1,13 @@
 import os
-import hashlib
+from sklearn.metrics import mean_squared_error
+from math import sqrt
 from os.path import join
 import cv2
+import numpy as np
 
 os.environ["PATH"] += os.pathsep + os.getcwd()
 
-
-# Function finds matching images by it's hash
-def getImgsHashs(datasetPath):
-    imgs = []
-    hashes = []
-
+def getBwLittleImgs(datasetPath):
     # Find all classes paths in directory and iterate over it
     for (i, classPath) in enumerate(os.listdir(datasetPath)):
 
@@ -23,66 +20,42 @@ def getImgsHashs(datasetPath):
             # Construct image patch
             imgPath = join(imgDir, imgPath)
 
-            image = cv2.imread(imgPath)
+            image = cv2.imread(imgPath, cv2.IMREAD_GRAYSCALE)
             resized_image = cv2.resize(image, (32, 32))
-            print(os.path.join(imgDir, str(j)+'_a.jpg'))
-            cv2.imwrite(os.path.join(imgDir, str(j)+'_a.jpg'), resized_image)
+            resized_image = np.array(resized_image)
+            cv2.imwrite(os.path.join(imgDir, '_'+str(j)+'a.jpg'), resized_image)
 
-            # Prepare new md5 object from hashlib
-            md5Hash = hashlib.md5()
+def getImgsHashs(datasetPath, rmsErrorThreshold = 5):
 
-            # Open image
-            with open(imgPath, 'rb') as f:
+    for (i, classPath) in enumerate(os.listdir(datasetPath)):
+        imgDir = join(datasetPath, classPath, "detected")
+        for (j, imgName) in enumerate(os.listdir(imgDir)):
+            imgPath = join(imgDir, imgName)
+            if os.path.exists(imgPath):
+                image = np.array(cv2.imread(imgPath, cv2.IMREAD_GRAYSCALE))
 
-                # Start iterate over all bytes in image (read every 4096 bytes)
-                for chunk in iter(lambda: f.read(32), b""):
+                for (k, cmpImgName) in enumerate(os.listdir(imgDir)):
+                    if imgName == cmpImgName:
+                        pass
+                    else:
+                        cmpImgPath = join(imgDir, cmpImgName)
+                        if os.path.exists(cmpImgPath):
+                            cmpImage = np.array(cv2.imread(cmpImgPath, cv2.IMREAD_GRAYSCALE))
 
-                    # Update hash every 4096 bytes
-                    md5Hash.update(chunk)
-
-                # Append hash and image patch to lists
-                imgs.append([imgPath])
-                hashes.append(md5Hash.hexdigest())
-
-    # Return lists of hashes and image paths. Those lists are aligned.
-    return imgs, hashes
-
-# Function deletes images that are duplicated
-def delDuplicates(im, hs):
-    imgs = im
-    hashs = hs
-
-    # Iterate over all images in detected directory
-    for i, img in enumerate(imgs):
-        hs = hashs[i]
-
-        # If image's hash duplicates.
-        if hashs.count(hs)>1:
-
-            # Remove them from directory and from hashes and image directory lists
-            # os.remove(img[0])
-            del(hashs[i])
-            del(imgs[i])
-            print("deleted", imgs[i])
-        else:
-            print("NOPE", imgs[i])
-    return imgs, hashs
-
+                            rms = sqrt(mean_squared_error(image, cmpImage))
+                            if rms < rmsErrorThreshold:
+                                os.remove(cmpImgPath)
+                                print (imgName, cmpImgName, rms)
+                        else:
+                            pass
+            else:
+                pass
 
 def main():
     datasetPath = os.getcwd() + "/Downloads"
 
-    # Calculate images hashes and prepare aligned lists of hashes and image paths
-    imgs, hashs = getImgsHashs(datasetPath)
-
-    # Delete duplicates and prepare new lists without duplicates
-    imgs, hashs = delDuplicates(imgs, hashs)
-
-    # Check if lists are the same lenght
-    if len(imgs) == len(hashs):
-        print("Finished - All Ok")
-    else:
-        print("Something went wrong. Lists are not the same length")
+    # getBwLittleImgs(datasetPath)
+    getImgsHashs(datasetPath)
 
 
 
