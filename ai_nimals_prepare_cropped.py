@@ -4,6 +4,7 @@ from math import sqrt
 from os.path import join
 import cv2
 import numpy as np
+from scipy import signal
 
 os.environ["PATH"] += os.pathsep + os.getcwd()
 
@@ -43,9 +44,11 @@ def getImgsHashs(datasetPath, rmsErrorThreshold = 5):
                             cmpImage = np.array(cv2.imread(cmpImgPath, cv2.IMREAD_GRAYSCALE))
 
                             rms = sqrt(mean_squared_error(image, cmpImage))
+                            cor = np.corrcoef(image.flat, cmpImage.flat)
+
                             if rms < rmsErrorThreshold:
                                 os.remove(cmpImgPath)
-                                print (imgName, cmpImgName, rms)
+                                print (imgName, cmpImgName, rms, cor[0, 1])
                         else:
                             pass
             else:
