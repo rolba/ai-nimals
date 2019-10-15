@@ -2,11 +2,16 @@
  
 Pleas read LICENSE first! It's MIT plus some additional points.
 
-<b>ai_nimals_scrapper.py:</b>
-
+<b>1. ai_nimals_scrapper.py:</b>
 This script was created for downloading multiple images from Google. Description and video is avilable on https://ai-experiments.com/ai-nimals-google-images-scrapping/
 
-<b>ai_nimals_prepare_scrapped.py:</b>
+<b>2. ai_nimals_prepare_scrapped.py:</b>
+This script was created to easily filter out no bird images from downloaded data set. Description and video is avilable on https://ai-experiments.com/cleaning-downloaded-by-scrapper-images/
 
-Description coming soon on 13.10.2019. This description will also include classes verification. 
+<b> 3. ai_nimals_prepare_cropped.py:</b>
+Work in progress. This script is for deleting similar or duplicated images.
+
+
+
+<b>Note. This repository is a WIP. The plan is to create nice robust calss for downloading images of MobileNetSSD classes. And maybe YOLO also :)<b>
  
