@@ -4,7 +4,7 @@ from math import sqrt
 from os.path import join
 import cv2
 import numpy as np
-from scipy import signal
+import shutil
 
 os.environ["PATH"] += os.pathsep + os.getcwd()
 
@@ -14,6 +14,14 @@ def getBwLittleImgs(datasetPath):
 
         # Construct cropped images dir
         imgDir = join(datasetPath, classPath, "detected")
+        bwDir = join(datasetPath, classPath, "bwdir")
+        print(classPath)
+        # Create Donwload patch or delete existing!
+        if not os.path.exists(bwDir):
+            os.makedirs(bwDir)
+        else:
+            shutil.rmtree(bwDir)
+            os.makedirs(bwDir)
 
         # Iterate over all images in directory
         for (j, imgPath) in enumerate(os.listdir(imgDir)):
@@ -22,11 +30,16 @@ def getBwLittleImgs(datasetPath):
             imgPath = join(imgDir, imgPath)
 
             image = cv2.imread(imgPath, cv2.IMREAD_GRAYSCALE)
-            resized_image = cv2.resize(image, (32, 32))
-            resized_image = np.array(resized_image)
-            cv2.imwrite(os.path.join(imgDir, '_'+str(j)+'a.jpg'), resized_image)
+            if image is not None:
+                resized_image = cv2.resize(image, (32, 32))
+                resized_image = np.array(resized_image)
+                cv2.imwrite(os.path.join(bwDir, str(j)+'.jpg'), resized_image)
+            else:
+                print(imgPath)
+                os.remove(imgPath)
 
-def getImgsHashs(datasetPath, rmsErrorThreshold = 5):
+
+def cleanDuplImgs(datasetPath, rmsErrorThreshold = 5):
 
     for (i, classPath) in enumerate(os.listdir(datasetPath)):
         imgDir = join(datasetPath, classPath, "detected")
@@ -58,7 +71,7 @@ def main():
     datasetPath = os.getcwd() + "/Downloads"
 
     # getBwLittleImgs(datasetPath)
-    getImgsHashs(datasetPath)
+    cleanDuplImgs(datasetPath)
 
 
 
