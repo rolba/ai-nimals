@@ -8,7 +8,7 @@ import shutil
 
 prototxt = "MobileNetSSD_deploy.prototxt.txt"
 model = "MobileNetSSD_deploy.caffemodel"
-confidence_threshold = 0.7
+confidence_threshold = 0.5
 
 # initialize the list of class labels MobileNet SSD was trained to detect
 CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
@@ -76,6 +76,7 @@ def main():
         if os.path.exists(join(datasetPath, imagePath, "detected")):
             shutil.rmtree(join(datasetPath, imagePath, "detected"))
 
+        print(imagePath)
         os.makedirs(join(datasetPath, imagePath, "detected"))
         onlyfileslist = [f for f in listdir(join(datasetPath, imagePath)) if isfile(join(datasetPath, imagePath, f))]
 
@@ -83,9 +84,9 @@ def main():
 
         # Now let's loop over all files in range of one class.
         for n in range(0, len(onlyfileslist)):
-            print(join(datasetPath, imagePath, onlyfileslist[n]))
-
-            frame = cv2.imread(join(datasetPath, imagePath, onlyfileslist[n]), cv2.IMREAD_COLOR)
+            # print(join(datasetPath, imagePath, onlyfileslist[n]))
+            imgPath = join(datasetPath, imagePath, onlyfileslist[n])
+            frame = cv2.imread(imgPath, cv2.IMREAD_COLOR)
             if frame is None:
                 print("Can not read image")
             else:
@@ -102,6 +103,7 @@ def main():
 
                     # Save image
                     cv2.imwrite(join(datasetPath, imagePath, "detected", str(n) + '.png'), paddedCropImg)
+            os.remove(imgPath)
 
     # do a bit of cleanup
     cv2.destroyAllWindows()
