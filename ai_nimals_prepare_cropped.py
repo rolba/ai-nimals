@@ -62,7 +62,7 @@ def findDelDuplBw(searchedName, bwDir):
                     os.remove(cmpImageBw)
                     print (searchedImg, cmpImageName, rms)
 
-def findDelFinal(detectedDir, bwDir):
+def findDelDetected(detectedDir, bwDir):
     bwFiles = os.listdir(bwDir)
     for file in os.listdir(detectedDir):
         if file not in bwFiles:
@@ -71,17 +71,31 @@ def findDelFinal(detectedDir, bwDir):
 
 def main():
 
+    # Define working directory - direcotry with our dowloaded data images
     datasetPath = os.getcwd() + "/Downloads"
+
+    # To clean data I wan to produce 32x32 pix images of data set.
+    # And store them in "bwdir" in every class
     getBwLittleImgs(datasetPath)
 
+    # Now lets iterate over all classes in data set
     for (i, classPath) in enumerate(os.listdir(datasetPath)):
 
+        # Join detected by previous script path
         detectedDir = join(datasetPath, classPath, "detected")
+        # Join black-white images path
         bwDir = join(datasetPath, classPath, "bwdir")
+
+        # Iterate over images in one class - detected images previously by MobileSSD net
         for (i, detectedImg) in enumerate(os.listdir(detectedDir)):
+            # Find duplicated BW images and delete duplicates.
             findDelDuplBw(detectedImg, bwDir)
 
-        findDelFinal(detectedDir, bwDir)
+        # Basing on cleaned BW images, now clean detected direcotry comparing data
+        # between detected directory and bwDir directory
+        findDelDetected(detectedDir, bwDir)
+
+        # Remove bwDir - we don't need it any more
         shutil.rmtree(bwDir)
 
 
