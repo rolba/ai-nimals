@@ -1,6 +1,6 @@
 import os
 import random
-
+import shutil
 
 
 os.environ["PATH"] += os.pathsep + os.getcwd()
@@ -9,8 +9,19 @@ trainingSetRatio = 0.6
 validationSetRatio = 0.2
 testingSetRatio = 0.2
 
-def fileCopier(sourceSet, setPath, setFiles):
-    pass
+def fileCopier(sourcePath, destPath, setFiles):
+    print("source:", sourcePath, "dest:", destPath, len(setFiles))
+
+    if not os.path.exists(destPath):
+        os.makedirs(destPath)
+    else:
+        shutil.rmtree(destPath)
+        os.makedirs(destPath)
+
+    for fileName in setFiles:
+        fileToCopyPath = os.path.join(sourcePath, fileName)
+        shutil.copy(fileToCopyPath, destPath)
+
 
 def main():
     datasetPath = os.getcwd() + "/Downloads"
@@ -33,9 +44,9 @@ def main():
         testingSet = dataSetList[trainingSetQuantity:testingSetQuantity+trainingSetQuantity]
         validationSet = dataSetList[testingSetQuantity+trainingSetQuantity: testingSetQuantity+trainingSetQuantity+validationSetQuantity]
 
-        trainingSetPath = os.path.join()
-        testingSetPath = os.path.join()
-        validationPath = os.path.join()
+        trainingSetPath = os.path.join(datasetPath, classFolder, "trainset")
+        testingSetPath = os.path.join(datasetPath, classFolder, "testset")
+        validationPath = os.path.join(datasetPath, classFolder, "validationset")
 
         fileCopier(datasetDetectedClass, trainingSetPath, trainingSet)
         fileCopier(datasetDetectedClass, testingSetPath, testingSet)
