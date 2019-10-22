@@ -9,7 +9,11 @@ This script was created to easily filter out no bird images from downloaded data
 https://ai-experiments.com/data-cleaning-python-mobilenet/
 
 <b> 3. ai_nimals_prepare_cropped.py:</b><br>
-Work in progress. This is next step of data cleaning with python script. The idea is to delete similar or duplicated images. Description in progress.
+Work in progress. This is next step of data cleaning with python script. The idea is to delete similar or duplicated images. Description avilable at <br>
+https://ai-experiments.com/remove-similar-images-opencv/
+
+<b> 4. ai_nimals_dataset_splitter.py:</b><br>
+I needed a script for splitting (copying) data to training, testing and validationg directories. It's a preparation for future h5py file generator. Short description is coming.
 
 
 
