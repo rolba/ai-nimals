@@ -45,24 +45,30 @@ def main():
         # I have to get rid of "_bird" from calssname. It can be hardcoded.
         className = classFolder[:-5]
         
-        
+        # Calculate quantity files for all data sets 
         validationSetQuantity = int(calssImagesQuantity * validationSetRatio-1)
         testingSetQuantity = int(calssImagesQuantity * testingSetRatio-1)
         trainingSetQuantity = int(calssImagesQuantity * trainingSetRatio)
         trainingSetQuantity += (calssImagesQuantity - (trainingSetQuantity+validationSetQuantity+testingSetQuantity))
 
+        # Shuffle dataSetList
         random.shuffle(dataSetList)
         random.shuffle(dataSetList)
         random.shuffle(dataSetList)
 
+        # Create sub list of files for traiing set 
         trainingSet = dataSetList[0:trainingSetQuantity]
+        # Create sub list of files for testing set 
         testingSet = dataSetList[trainingSetQuantity:testingSetQuantity+trainingSetQuantity]
+        # Create sub list of files for validation set 
         validationSet = dataSetList[testingSetQuantity+trainingSetQuantity: testingSetQuantity+trainingSetQuantity+validationSetQuantity]
 
+        # I need a path to save images of sets into proper direcotries
         trainingSetPath = os.path.join(datasetPath, classFolder, "trainset")
         testingSetPath = os.path.join(datasetPath, classFolder, "testset")
         validationPath = os.path.join(datasetPath, classFolder, "validationset")
 
+        # Copy images into paths to have it stored in proper places per data set
         fileCopier(datasetDetectedClass, trainingSetPath, trainingSet)
         fileCopier(datasetDetectedClass, testingSetPath, testingSet)
         fileCopier(datasetDetectedClass, validationPath, validationSet)
