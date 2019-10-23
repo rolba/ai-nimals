@@ -17,13 +17,15 @@ testingSetRatio = 0.2
 
 def fileCopier(sourcePath, destPath, setFiles):
     print("source:", sourcePath, "dest:", destPath, len(setFiles))
-
+    
+    # Check if destination folder exists. If yes - delete it. If no - create.
     if not os.path.exists(destPath):
         os.makedirs(destPath)
     else:
         shutil.rmtree(destPath)
         os.makedirs(destPath)
-
+    
+    # Copy files from source to destinantion
     for fileName in setFiles:
         fileToCopyPath = os.path.join(sourcePath, fileName)
         shutil.copy(fileToCopyPath, destPath)
