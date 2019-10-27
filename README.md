@@ -13,8 +13,11 @@ Work in progress. This is next step of data cleaning with python script. The ide
 https://ai-experiments.com/remove-similar-images-opencv/
 
 <b> 4. ai_nimals_dataset_splitter.py:</b><br>
-In a meantime it turned out that before I start generating h5py faile containers I need a script for splitting (copying) data to training, testing and validationg directories. Short description is coming.
+In a meantime it turned out that it will be more clear if I separate data splitting as new file. Before I start generating h5py faile containers of training, testing and validating data. I like those data stores as CSV files with image paths.
+<br>Description is in progress. I hope to have it done on wednesday 30th of october 2019.
 
+
+<b>It can me weird. But working withc AI is not only training your model. It is mostly preparing data for training. What usually takes about 80% of yor development time. I have been commiting my work for about 4 weeks. And still it's not finished. I have my scrapper, cleaner (x2), and CSV data sets splitter. It all leads to take care of h5py file containers. That is the starting point for our CNN Wonderland journey! I cant wait to show you how deep (learning) the rabbit hole goes!
 
 <b>Note. This repository is a WIP. The plan is to create nice robust calss for downloading images of MobileNetSSD classes. And maybe YOLO also :). Firstly I want to have full functionality before I rework this code<b>
  
