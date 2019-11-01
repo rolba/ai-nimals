@@ -99,14 +99,14 @@ def main():
         for element in validationSet:
             validateFileList.append(str(os.path.join(datasetDetectedClass, element)))
 
-    	# Save train data set
-	saveDataSet(trainFileList, os.path.join(trainingSetPath, "trainSet.csv"))
+    # Save train data set
+    saveDataSet(trainFileList, os.path.join(trainingSetPath, "trainSet.csv"))
 
-	# Save test data set
-	saveDataSet(testfileList, os.path.join(testingSetPath, "testSet.csv"))
- 
-	# Save validate data set
-	saveDataSet(validateFileList, os.path.join(validatingPath, "validateSet.csv"))
+    # Save test data set
+    saveDataSet(testfileList, os.path.join(testingSetPath, "testSet.csv"))
+
+    # Save validate data set
+    saveDataSet(validateFileList, os.path.join(validatingPath, "validateSet.csv"))
 
 
 if __name__ == "__main__":
