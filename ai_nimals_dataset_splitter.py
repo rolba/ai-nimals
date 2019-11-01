@@ -23,7 +23,6 @@ def makeDelPath(workingPath):
         shutil.rmtree(workingPath)
         os.makedirs(workingPath)
 
-
 def main():
     # Discover datatset path and construct it
     datasetPath = os.getcwd() + "/Downloads"
@@ -45,7 +44,7 @@ def main():
     # List of file paths for validating
     validateFileList = []
 
-    # Iterate over this directory. classFolder is a foilder that has images fo given class
+# Iterate over this directory. classFolder is a foilder that has images fo given class
     for (i, classFolder) in enumerate (os.listdir(datasetPath)):
 
         # Concatenate path with images to be splitted
@@ -75,16 +74,17 @@ def main():
             trainFileList.append(str(os.path.join(datasetDetectedClass, element)))
 
         # Create sub list of files for testing set
-        testingSet = dataSetList[trainingSetQuantity:testingSetQuantity+trainingSetQuantity]
+        testingSet = dataSetList[trainingSetQuantity:testingSetQuantity + trainingSetQuantity]
         # Create list of paths
         for element in testingSet:
             testfileList.append(str(os.path.join(datasetDetectedClass, element)))
 
         # Create sub list of files for validation set
-        validationSet = dataSetList[testingSetQuantity+trainingSetQuantity: testingSetQuantity+trainingSetQuantity+validatingSetQuantity]
+        validationSet = dataSetList[testingSetQuantity + trainingSetQuantity: testingSetQuantity + trainingSetQuantity + validatingSetQuantity]
         # Create list of paths
         for element in validationSet:
             validateFileList.append(str(os.path.join(datasetDetectedClass, element)))
+
 
     # Shuffle image path list
     random.shuffle(trainFileList)
@@ -109,7 +109,6 @@ def main():
     # Save to CSV
     df = pandas.DataFrame(validateFileList)
     df.to_csv(os.path.join(validatingPath, "validateSet.csv"), sep=',', index=False)
-
 
 
 if __name__ == "__main__":
