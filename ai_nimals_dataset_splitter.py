@@ -15,6 +15,8 @@ validationSetRatio = 0.15
 # You check how your model performs on unseen data when applying trained model
 testingSetRatio = 0.1
 
+# Helper function for checking if working path exist - deleting and creating if so. Creting of not.
+# workingPath is a path
 def makeDelPath(workingPath):
     # Check if destination folder exists. If yes - delete it. If no - create.
     if not os.path.exists(workingPath):
@@ -22,6 +24,18 @@ def makeDelPath(workingPath):
     else:
         shutil.rmtree(workingPath)
         os.makedirs(workingPath)
+
+# Helper function for randomizing and savind data sets asn CSV.
+# filesList is a list of strings
+# dataSetSavePath is a path
+def saveDataSet(filesList, dataSetSavePath):
+    # Shuffle image path list
+    random.shuffle(filesList)
+    random.shuffle(filesList)
+    random.shuffle(filesList)
+    # Save to CSV
+    df = pandas.DataFrame(filesList)
+    df.to_csv(dataSetSavePath, sep=',', index=False)
 
 def main():
     # Discover datatset path and construct it
@@ -44,7 +58,7 @@ def main():
     # List of file paths for validating
     validateFileList = []
 
-# Iterate over this directory. classFolder is a foilder that has images fo given class
+    # Iterate over this directory. classFolder is a foilder that has images fo given class
     for (i, classFolder) in enumerate (os.listdir(datasetPath)):
 
         # Concatenate path with images to be splitted
@@ -74,41 +88,25 @@ def main():
             trainFileList.append(str(os.path.join(datasetDetectedClass, element)))
 
         # Create sub list of files for testing set
-        testingSet = dataSetList[trainingSetQuantity:testingSetQuantity + trainingSetQuantity]
+        testingSet = dataSetList[trainingSetQuantity:testingSetQuantity+trainingSetQuantity]
         # Create list of paths
         for element in testingSet:
             testfileList.append(str(os.path.join(datasetDetectedClass, element)))
 
         # Create sub list of files for validation set
-        validationSet = dataSetList[testingSetQuantity + trainingSetQuantity: testingSetQuantity + trainingSetQuantity + validatingSetQuantity]
+        validationSet = dataSetList[testingSetQuantity+trainingSetQuantity: testingSetQuantity+trainingSetQuantity+validatingSetQuantity]
         # Create list of paths
         for element in validationSet:
             validateFileList.append(str(os.path.join(datasetDetectedClass, element)))
 
+    	# Save train data set
+	saveDataSet(trainFileList, os.path.join(trainingSetPath, "trainSet.csv"))
 
-    # Shuffle image path list
-    random.shuffle(trainFileList)
-    random.shuffle(trainFileList)
-    random.shuffle(trainFileList)
-    # Save to CSV
-    df = pandas.DataFrame(trainFileList)
-    df.to_csv(os.path.join(trainingSetPath, "trainSet.csv"), sep=',', index=False)
-
-    # Shuffle image path list
-    random.shuffle(testfileList)
-    random.shuffle(testfileList)
-    random.shuffle(testfileList)
-    # Save to CSV
-    df = pandas.DataFrame(testfileList)
-    df.to_csv(os.path.join(testingSetPath, "testSet.csv"), sep=',', index=False)
-
-    # Shuffle image path list
-    random.shuffle(validateFileList)
-    random.shuffle(validateFileList)
-    random.shuffle(validateFileList)
-    # Save to CSV
-    df = pandas.DataFrame(validateFileList)
-    df.to_csv(os.path.join(validatingPath, "validateSet.csv"), sep=',', index=False)
+	# Save test data set
+	saveDataSet(testfileList, os.path.join(testingSetPath, "testSet.csv"))
+ 
+	# Save validate data set
+	saveDataSet(validateFileList, os.path.join(validatingPath, "validateSet.csv"))
 
 
 if __name__ == "__main__":
