@@ -2,6 +2,7 @@ import os
 import random
 import shutil
 import pandas
+import json
 
 os.environ["PATH"] += os.pathsep + os.getcwd()
 
@@ -46,10 +47,12 @@ def main():
     trainingSetPath = os.path.join(splittedSetPath, "trainset")
     testingSetPath = os.path.join(splittedSetPath, "testset")
     validatingPath = os.path.join(splittedSetPath, "validationset")
+    labelsPath = os.path.join(splittedSetPath, "labels")
 
     makeDelPath(trainingSetPath)
     makeDelPath(testingSetPath)
     makeDelPath(validatingPath)
+    makeDelPath(labelsPath)
 
     # List of file paths for training
     trainFileList = []
@@ -59,6 +62,8 @@ def main():
     validateFileList = []
 
     # Iterate over this directory. classFolder is a foilder that has images fo given class
+    classNames = []
+
     for (i, classFolder) in enumerate (os.listdir(datasetPath)):
 
         # Concatenate path with images to be splitted
@@ -69,7 +74,7 @@ def main():
         calssImagesQuantity = len(dataSetList)
         # I have to get rid of "_bird" from calssname. It can be hardcoded.
         className = classFolder[:-5]
-
+        classNames.append(className)
         # Calculate quantity files for all data sets
         validatingSetQuantity = int(calssImagesQuantity * validationSetRatio-1)
         testingSetQuantity = int(calssImagesQuantity * testingSetRatio-1)
@@ -108,6 +113,9 @@ def main():
     # Save validate data set
     saveDataSet(validateFileList, os.path.join(validatingPath, "validateSet.csv"))
 
+    f = open(os.path.join(labelsPath, "labels.json"), "w")
+    f.write(json.dumps({"labels": classNames}))
+    f.close()
 
 if __name__ == "__main__":
     main()
