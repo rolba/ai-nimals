@@ -6,6 +6,19 @@ import cv2
 import numpy as np
 import json
 
+class DatasetWriter:
+    def __init__(self, containerPath, dimensions, labelsName="labels", dataSetName="images"):
+        self.container = h5py.File(containerPath, "w")
+        self.dataset = self.container.create_dataset(dataSetName, dimensions, dtype="float")
+        self.labels = self.container.create_dataset(labelsName, (dimensions[0],), dtype="int")
+
+    def add(self, image, label, index):
+        self.dataset[index] = image
+        self.labels[index] = label
+
+    def close(self):
+        self.container.close()
+
 os.environ["PATH"] += os.pathsep + os.getcwd()
 
 # Discover datatset path and construct it
@@ -36,21 +49,27 @@ def main():
             labels.append(label)
         labels = le.fit_transform(labels)
 
+        writer = DatasetWriter(singleSetPath[:-3]+"h5py", (len(dataPaths), 256, 256, 3))
+
         for (i, (path, label)) in enumerate(zip(dataPaths, labels)):
             # load the image and process it
             image = cv2.imread(path[0])
             image = cv2.resize(image, (256, 256), interpolation=cv2.INTER_AREA)
+            writer.add(image, label, i)
+            print(i, label)
             if setFileName == "trainSet.csv":
                 (b, g, r) = cv2.mean(image)[:3]
                 R.append(r)
                 G.append(g)
                 B.append(b)
-
+        writer.close()
     D = {"R": np.mean(R), "G": np.mean(G), "B": np.mean(B)}
-    f = open(os.path.join(trainingSetPath, "trainmean.json"), "w")
+    f = open(os.path.join(trainingSetPath, "train_mean.json"), "w")
     f.write(json.dumps(D))
     f.close()
 
 
 if __name__ == "__main__":
     main()
+
+
