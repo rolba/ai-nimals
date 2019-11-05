@@ -1,23 +1,10 @@
-import h5py
+from DatasetWriter import DatasetWriter
 import os
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import cv2
 import numpy as np
 import json
-
-class DatasetWriter:
-    def __init__(self, containerPath, dimensions, labelsName="labels", dataSetName="images"):
-        self.container = h5py.File(containerPath, "w")
-        self.dataset = self.container.create_dataset(dataSetName, dimensions, dtype="float")
-        self.labels = self.container.create_dataset(labelsName, (dimensions[0],), dtype="int")
-
-    def add(self, image, label, index):
-        self.dataset[index] = image
-        self.labels[index] = label
-
-    def close(self):
-        self.container.close()
 
 os.environ["PATH"] += os.pathsep + os.getcwd()
 
