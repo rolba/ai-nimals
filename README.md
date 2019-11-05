@@ -1,5 +1,7 @@
 # ai-nimals
-MIT license :)
+MIT license :)<br>
+
+To run my code you should execute file by file in below order. First you want to scrap data from google. Than you wan your crops and only images of birds. When this is done you want to clean your data - get rid of similar and duplicate data. Next step is to generate h5py file containers for training neural networks.
 
 <b>1. ai_nimals_scrapper.py:</b><br>
 This script was created for downloading multiple images from Google. Images scraping in python description is avilable on<br> https://ai-experiments.com/images-scraping-python-selenium/
