@@ -21,5 +21,15 @@ https://ai-experiments.com/training-data-splitting-python/
 <b> 5. ai_nimals_h5py_generator.py:</b><br>
 Generates h5py file containers. Work in progress.
 
+<br>
+Helpers:
+<br>
+<b> 1. DatasetWriter.py:</b><br>
+H5PY helper class for generating containers. <br>
+Usage:
+writer = DatasetWriter("datasetFileName.h5py", (len(dataPaths), 256, 256, 3))
+writer.add(cv2Image[i], label[i], i) - i is an iterator. You can loop over your directory
+writer.close - closes your h5py file
+<br>
 <b>Note. This repository is a WIP. The plan is to create nice robust calss for downloading images of MobileNetSSD classes. And maybe YOLO also :). Firstly I want to have full functionality before I rework this code<b>
  
