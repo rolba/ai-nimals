@@ -19,7 +19,8 @@ In a meantime it turned out that before I start generating h5py faile containers
 https://ai-experiments.com/training-data-splitting-python/
 
 <b> 5. ai_nimals_h5py_generator.py:</b><br>
-Generates h5py file containers. Work in progress.
+Generates h5py file containers. Deatiled description:<br>
+https://ai-experiments.com/hdf5-python-h5py-library/
 
 <br>
 Helpers:
