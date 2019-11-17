@@ -33,6 +33,8 @@ def main():
     for singleSetPath in dataSet:
         # Split single csv data set and extract csv filename
         setFileName = singleSetPath.split(os.path.sep)[-1]
+
+        print(setFileName)
         # Read CSV file to memory
         dataPaths = pd.read_csv(singleSetPath).values
         # Create LabelEncoder object for encoding labels or classes
@@ -61,7 +63,6 @@ def main():
 
             # write image to h5py file container
             writer.add(image, label, i)
-            print(i, label)
 
             # append r g b channel mean of certain image to list of means
             if setFileName == "trainSet.csv":
