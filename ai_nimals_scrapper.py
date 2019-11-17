@@ -5,10 +5,66 @@ import urllib3
 import time
 import shutil
 
-searched_test_array = [ "Parus major", 
-                        "Poecile montanus",
-                        "Carduelis flammea",
-                        "Parus cristatus"]
+searched_test_array = [
+                        # "Parus major bird",
+                        "Poecile montanus bird",
+                        # "Carduelis flammea bird",
+                        # "Parus cristatus bird",
+                        # "Carduelis spinus bird",
+                        # "Turdus iliacus bird",
+                        # "Dryocopus martius bird",
+                        # "Dendrocopos major bird",
+                        # "Picus canus bird",
+                        # "Picus viridis bird",
+                        # "Dendrocopos medius bird",
+                        # "Dendrocopos minor bird",    #NOK
+                        # "Carduelis chloris bird",
+                        # "Pyrrhula pyrrhula bird",
+                        # "Columba livia bird",
+                        "Coccothraustes coccothraustes bird",
+                        # "Carduelis cannabina bird",
+                        # "Passer montanus bird",
+                        # "Larus canus bird",
+                        # "Larus argentatus bird",
+                        "Parus caeruleus bird",
+                        # "Regulus regulus bird",
+                        # "Buteo buteo bird",
+                        # "Certhia familiaris bird",
+                        # "Certhia brachydactyla bird",
+                        # "Emberiza calandra bird bird",
+                        # "Corvus frugilegus bird",
+                        # "Accipiter gentilis bird",
+                        # "Bombycilla garrulus bird",
+                        # "Fringilla montifringilla bird",
+                        # "Corvus monedula bird",
+                        # "Turdus merula bird",
+                        # "Sitta europaea bird",
+                        # "Accipiter nisus bird",
+                        # "Corvus corax bird",
+                        # "Turdus pilaris bird",
+                        # "Emberiza schoeniclus bird",
+                        # "Aegithalos caudatus bird",
+                        # "Erithacus rubicola bird",
+                        # "Carduelis flavirostris bird",
+                        # "Streptopelia decaocto bird",
+                        # "Parus palustris bird",
+                        # "Parus ater bird",
+                        # "Pica pica bird",
+                         # "Lanius excubitor bird",
+                         # "Troglodytes troglodytes bird",
+                         "Carduelis carduelis bird",
+                         # "Sturnus vulgaris bird",
+
+                        #"Garrulus glandarius bird",
+                        #"Emberiza citrinella bird",
+
+
+                         # "Corvus corone bird",
+                         # "Passer domesticus bird",
+                         # "Panurus biarmicus bird",
+                         # "Fringilla coelebs bird",
+                         # "Larus ridibundus bird"
+]
 
 num_requested = 1000
 
@@ -22,9 +78,9 @@ def main():
     # Create Donwload patch or delete existing!
     if not os.path.exists(download_path):
         os.makedirs(download_path)
-    else:
-        shutil.rmtree(download_path)
-        os.makedirs(download_path)
+    # else:
+    #     shutil.rmtree(download_path)
+    #     os.makedirs(download_path)
 
     # Iterate over search array
     for searchtext in searched_test_array:
@@ -33,9 +89,9 @@ def main():
         searchedTextDir = os.path.join(download_path, searchtext.replace(" ", "_"))
         if not os.path.exists(searchedTextDir):
             os.makedirs(searchedTextDir)
-        else:
-            shutil.rmtree(searchedTextDir)
-            os.makedirs(searchedTextDir)
+        # else:
+        #     shutil.rmtree(searchedTextDir)
+        #     os.makedirs(searchedTextDir)
 
         # Prepare search URL. searchtext is a name of a class.
         url = "https://www.google.com/search?q="+searchtext+"&source=lnms&tbm=isch"
@@ -83,7 +139,7 @@ def main():
                 http = urllib3.PoolManager()
 
                 # Write image to hdd. Don't forget about timeout!
-                response = http.request('GET', img_url, timeout = 10)
+                response = http.request('GET', img_url, timeout = 2)
                 f = open(searchedTextDir+"/"+str(downloaded_img_count)+"."+img_type, "wb")
                 f.write(response.data)
                 f.close
