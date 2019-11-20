@@ -3,6 +3,16 @@ from sklearn.feature_extraction.image import extract_patches_2d
 from keras.preprocessing.image import img_to_array
 from keras.preprocessing.image import ImageDataGenerator
 
+from keras.models import Sequential
+from keras.layers.normalization import BatchNormalization
+from keras.layers.convolutional import Conv2D
+from keras.layers.convolutional import MaxPooling2D
+from keras.layers.core import Activation
+from keras.layers.core import Flatten
+from keras.layers.core import Dropout
+from keras.layers.core import Dense
+from keras.regularizers import l2
+
 import cv2
 
 def buildAlexnet():
@@ -62,11 +72,11 @@ def meanPreprocessor(image, r, g, b):
     B = B - b
     return cv2.merge([B, G, R])
 
-def resizePreprocessor(image, h, w):
-    return cv2.resize(image, (h, w), interpolation=self.inter)
+def resizePreprocessor(image, h, w, inter=cv2.INTER_AREA):
+    return cv2.resize(image, (h, w), interpolation=inter)
 
 def imgToArray(image, dataFormat = None):
-    return img_to_array(image, data_format=self.dataFormat)
+    return img_to_array(image, data_format=dataFormat)
 
 def augumentator():
     aug = ImageDataGenerator(rotation_range=15, zoom_range=0.1,
