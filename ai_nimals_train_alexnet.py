@@ -15,7 +15,9 @@ from keras.regularizers import l2
 from keras.optimizers import Adam, SGD
 from keras import backend as K
 
+import os
 import cv2
+import h5py
 
 def buildAlexnet(width, height, depth, classes, reg):
         alexnetmodel = Sequential()
@@ -90,7 +92,21 @@ def generator():
     pass
 
 def main():
-    alexNetModel = buildAlexnet(width=227, height=227, depth=3, classes=45, reg=0.0003)
+    splittedSetPath = os.getcwd() + "/dataset"
+    trainingSetPath = os.path.join(splittedSetPath, "trainset", "trainSet.h5py")
+    testingSetPath = os.path.join(splittedSetPath, "testset", "testSet.h5py")
+    validatingPath = os.path.join(splittedSetPath, "validationset", "validateSet.h5py")
+    labelsPath = os.path.join(splittedSetPath, "labels", "labels.json")
+
+    trainDb = h5py.File(trainingSetPath, "r")
+    print(trainDb["labels"].shape[0])
+    testDb = h5py.File(testingSetPath, "r")
+    print(testDb["labels"].shape[0])
+    valDb = h5py.File(validatingPath, "r")
+    print(valDb["labels"].shape[0])
+
+
+    alexNetModel = buildAlexnet(width=227, height=227, depth=3, classes=55, reg=0.0003)
     opt = Adam(lr=1e-3)
     alexNetModel.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
 
