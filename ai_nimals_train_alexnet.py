@@ -12,11 +12,12 @@ from keras.layers.core import Flatten
 from keras.layers.core import Dropout
 from keras.layers.core import Dense
 from keras.regularizers import l2
+from keras.optimizers import Adam, SGD
+from keras import backend as K
 
 import cv2
 
-def buildAlexnet():
-    def build(width, height, depth, classes, reg):
+def buildAlexnet(width, height, depth, classes, reg):
         alexnetmodel = Sequential()
         inputShape = (height, width, depth)
         chanDim = -1
@@ -89,7 +90,12 @@ def generator():
     pass
 
 def main():
-    pass
+    alexNetModel = buildAlexnet(width=227, height=227, depth=3, classes=45, reg=0.0003)
+    opt = Adam(lr=1e-3)
+    alexNetModel.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
+
+
+
 
 
 if __name__ == "__main__":
