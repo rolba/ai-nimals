@@ -17,13 +17,21 @@ splittedSetPath = os.getcwd() + "/dataset"
 trainingSetPath = os.path.join(splittedSetPath, "trainset")
 testingSetPath = os.path.join(splittedSetPath, "testset")
 validatingPath = os.path.join(splittedSetPath, "validationset")
-
+labelsPath = os.path.join(splittedSetPath, "labels")
 # Create list for iterating over datasets.
 dataSet = []
 dataSet.append(os.path.join(trainingSetPath, "trainSet.csv"))
 dataSet.append(os.path.join(testingSetPath, "testSet.csv"))
 dataSet.append(os.path.join(validatingPath, "validateSet.csv"))
 
+classes = []
+# Discover and update labels list with all labels in dataset
+dirList = os.listdir(datasetPath)
+for p in dirList:
+    classes.append(p[:-5])
+f = open(labelsPath+"/labels.json", "w")
+f.write(json.dumps({"labels": classes}))
+f.close()
 
 def main():
     # create 3 lists that will acumulate mean of all training images. This will be needed in training process.
