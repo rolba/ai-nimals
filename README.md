@@ -23,6 +23,9 @@ Generates h5py file containers. Deatiled description:<br>
 https://ai-experiments.com/hdf5-python-h5py-library/
 
 <br>
+<b> 6. ai_nimals_train_alexnet.py</b><br>
+I am currently working on training script for alexnet and some helper class.
+
 Helpers:
 <br>
 <b> 1. DatasetWriter.py:</b><br>
