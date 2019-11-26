@@ -73,7 +73,7 @@ class DataGenerator:
 
 					processedImgs.append(img_to_array(image))
 				images = np.array(processedImgs)
-
+				images = images/128
 				# Mage data augumentation
 				if self.aug is not None:
 					(images, labels) = next(self.aug.flow(images,
