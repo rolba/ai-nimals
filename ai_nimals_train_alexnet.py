@@ -112,8 +112,9 @@ def main():
     trainGenerator.setmeanpreprocessor(means["R"], means["G"], means["B"])
 
     # For validation set you want only validation generator and image resizer. No Mean substraction!
-    validateGenerator = dg(valDb, batchSize = 32, aug = augumentator(), binarize = True, classesNum=55 )
+    validateGenerator = dg(valDb, batchSize = 32, aug = None, binarize = True, classesNum=55 )
     validateGenerator.setimageresizer(width = 227, height = 227)
+    validateGenerator.setmeanpreprocessor(means["R"], means["G"], means["B"])
 
     # Train the network using generated data.
     alexNetModel.fit_generator(
@@ -125,6 +126,9 @@ def main():
         max_queue_size=128 * 2,
         verbose=1,
         workers = 1)
+    # save the model to file
+    print("[INFO] serializing model...")
+    alexNetModel.save(os.path.join(os.getcwd(), "model", "AlexNet.model"), overwrite=True)
 
 if __name__ == "__main__":
     main()
