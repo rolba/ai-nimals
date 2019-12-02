@@ -123,7 +123,7 @@ def main():
         validation_data=validateGenerator.generator(),
         validation_steps=validateGenerator.numImages // 32,
         epochs=20,
-        max_queue_size=128 * 2,
+        max_queue_size=32 * 2,
         verbose=1,
         workers = 1)
     # save the model to file
