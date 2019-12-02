@@ -27,6 +27,10 @@ https://ai-experiments.com/hdf5-python-h5py-library/
 Here you can find the training script for alexnet. I also describe how to deal with killing your script by linux kernel and why it is importatnt to watch your SWAP memory size in corelation with bathsize.
 https://ai-experiments.com/model-training-in-keras-and-python/
 
+<br>
+<b> 7. ai_nimals_app.py</b><br>
+This is main application. This application is using VGG16 network. So far I have to add some modifications and describe it on my blog.
+
 Helpers:
 <br>
 <b> 1. DatasetWriter.py:</b><br>
