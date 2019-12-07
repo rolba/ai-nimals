@@ -1,6 +1,3 @@
-from config import ai_nimals_config as aiConfig
-
-
 import numpy as np
 import time
 import cv2
@@ -8,52 +5,38 @@ from imutils.video import FPS
 import threading
 import queue
 import csv
-
+import os
+import json
 # load the detection module model
 print("[INFO] loading detection model...")
 detectionNet = cv2.dnn.readNetFromCaffe("MobileNetSSD_deploy.prototxt.txt", "MobileNetSSD_deploy.caffemodel")
 
+classesNumber = 55
+
 # initialize the list of birds class labels for VGG16 net the model was trained for
-classNames = [
-    'Bombycilla garrulus, Jemioluszka',
-    'Carduelis chloris, Dzwoniec',
-    'Carduelis spinus, Czyz',
-    'Coccothraustes coccothraustes, Grubodziob',
-    'Corvus corone, Wrona siwa',
-    'Corvus frugilegus, Gawron',
-    'Corvus monedula, Kawka',
-    'Dendrocopos major, Dziecial duzy',
-    'Erithacus rubicola, Rudzik',
-    'Fringilla coelebs, Zieba',
-    'Garrulus glandarius, Sojka',
-    'Parus caeruleus, Modraszka',
-    'Parus major, Bogatka',
-    'Passer domesticus, Wrobel',
-    'Passer montanus, Mazurek',
-    'Pica pica, Sroka',
-    'Pyrrhula pyrrhula, Gil',
-    'Streptopelia decaocto, Sierpowka',
-    'Sturnus vulgaris, Szpak',
-    'Troglodytes troglodytes, Strzyzyk',
-    'Turdus merula, Kos',
-    'Turdus pilaris, Kwiczol'
-]
+classNamesPath = os.getcwd() + "/dataset"
+clPath = os.path.join(classNamesPath, "labels", "labels.json")
+labels = json.loads(open(clPath).read())
+classNames = labels["labels"]
 
 # initialize the list of class labels for MobileNet SSD the model was trained for
 CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
            "bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
            "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
            "sofa", "train", "tvmonitor"]
+
 COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 
+modelsPath = os.getcwd() + "/model"
+modelPath = os.path.join(modelsPath, "ai_nimals_finetuned_vgg16.model")
 
 # classification thread
 def classificationWorker(inQueue, outQueue):
     from keras.models import load_model
 
     # load the birds model
-    print("[INFO] loading classification model...")
-    classModel = load_model(aiConfig.FINETUNED_VGG16_MODEL)
+    print("Loading classification model...")
+    classModel = load_model(modelPath)
 
     while True:
         if not inQueue.empty():
@@ -78,8 +61,8 @@ threading.Thread(target=classificationWorker, args=(inputQueue, outputQueue)).st
 
 # load videofile or load camera interface
 print("[INFO] loading video file...")
-# cap = cv2.VideoCapture('videos/1.mp4')
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('videos/3.mp4')
+# cap = cv2.VideoCapture(0)
 time.sleep(2.0)
 
 # Init engine and minor values
@@ -95,7 +78,7 @@ detectCntr = 0
 foundClassName = ""
 time.sleep(1)
 fps = FPS().start()
-sessionTable = np.zeros(aiConfig.NUM_CLASSES)
+sessionTable = np.zeros(classesNumber)
 statisticTable = []
 fillQueue = False
 queueImage = None
@@ -217,7 +200,7 @@ while (cap.isOpened()):
             statisticTable.append([classNames[sessionTable.argmax()], str(int(ts))])
 
             noBird = 0
-            sessionTable = np.zeros(aiConfig.NUM_CLASSES)
+            sessionTable = np.zeros(classesNumber)
 
     fps.update()
     fps.stop()
