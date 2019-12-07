@@ -11,7 +11,7 @@ import json
 print("[INFO] loading detection model...")
 detectionNet = cv2.dnn.readNetFromCaffe("MobileNetSSD_deploy.prototxt.txt", "MobileNetSSD_deploy.caffemodel")
 
-classesNumber = 55
+classesNumber = 22
 
 # initialize the list of birds class labels for VGG16 net the model was trained for
 classNamesPath = os.getcwd() + "/dataset"
