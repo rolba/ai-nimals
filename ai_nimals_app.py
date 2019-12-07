@@ -28,7 +28,7 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
 COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 
 modelsPath = os.getcwd() + "/model"
-modelPath = os.path.join(modelsPath, "ai_nimals_finetuned_vgg16.model")
+modelPath = os.path.join(modelsPath, "ai_nimals_googlenet.model")
 
 # classification thread
 def classificationWorker(inQueue, outQueue):
@@ -47,6 +47,7 @@ def classificationWorker(inQueue, outQueue):
             birdLabel = birdLabel[0].astype(np.int32)
             birdLabelPosition = np.where(birdLabel == 1)
             if birdLabelPosition[0]:
+                print(birdLabel, foundClassName)
                 foundClassName = classNames[birdLabelPosition[0][0]]
                 outValuesDict = {"birdLabel": birdLabel, "foundClassName": foundClassName}
                 outQueue.put(outValuesDict)
@@ -131,14 +132,14 @@ while (cap.isOpened()):
 
                         # crop bird detection ROI
                         queueImage = img[startY:startY + (endY - startY), startX:startX + (endX - startX)]
-
+                        cv2.rectangle(img, (startX, startY), (endX, endY), (10, 255, 100), 2)
                         # kcf tracker - prepare crop for tracking - to improve algorith speed
                         bbox = (startX, startY, endX, endY)
 
                         fillQueue = True
-                        trackerReinit = True
-                        kcfTracker = True
-                        nnDetection = False
+                        # trackerReinit = True
+                        # kcfTracker = True
+                        # nnDetection = False
                         detectCntr = 0
                         break
 
@@ -146,7 +147,7 @@ while (cap.isOpened()):
     if fillQueue:
         if inputQueue.empty():
             inputQueue.put(queueImage)
-            fillQueue = False
+            # fillQueue = False
 
     # if classification is done - take label name
     if not outputQueue.empty():
@@ -154,54 +155,53 @@ while (cap.isOpened()):
         if detections is not None:
             foundClassName = detections["foundClassName"]
             sessionTable += detections["birdLabel"]
-    cv2.putText(img, foundClassName + " " + str(birdConfidence), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255),
-                2)
-
-    # kcf tracker - track bird using opencv to speedup algorithm
-    if kcfTracker:
-        if trackerReinit:
-            tracker = cv2.TrackerKCF_create()
-            ok = tracker.init(img, bbox)
-            if ok:
-                trackerReinit = False
-            else:
-                print("[ERROR]: KCF Reinit Fail, detectCntr: ", detectCntr)
-                kcfTracker = False
-                nnDetection = True
-        else:
-            ok, newbox = tracker.update(img)
-
-            if ok:
-                noBird = 0
-                p1 = (int(newbox[0]), int(newbox[1]))
-                p2 = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
-                cv2.rectangle(img, p1, p2, (10, 255, 100), 2)
-
-            else:
-                print("[ERROR]: KCF Lost, detectCntr: ", detectCntr)
-                kcfTracker = False
-                nnDetection = True
-
-    if detectCntr == 3:
-        nnDetection = True
-        kcfTracker = False
-        detectCntr = 0
-
-    detectCntr += 1
-    noBird += 1
-
-    # statistic update
-    if noBird == 3:
-        if (sessionTable == 0).all():
-            noBird = 0
-        else:
-            ts = time.time()
-            local = []
-            statisticTable.append([classNames[sessionTable.argmax()], str(int(ts))])
-
-            noBird = 0
-            sessionTable = np.zeros(classesNumber)
-
+    cv2.putText(img, foundClassName + " " + str(birdConfidence), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+    #
+    # # kcf tracker - track bird using opencv to speedup algorithm
+    # if kcfTracker:
+    #     if trackerReinit:
+    #         tracker = cv2.TrackerKCF_create()
+    #         ok = tracker.init(img, bbox)
+    #         if ok:
+    #             trackerReinit = False
+    #         else:
+    #             print("[ERROR]: KCF Reinit Fail, detectCntr: ", detectCntr)
+    #             kcfTracker = False
+    #             nnDetection = True
+    #     else:
+    #         ok, newbox = tracker.update(img)
+    #
+    #         if ok:
+    #             noBird = 0
+    #             p1 = (int(newbox[0]), int(newbox[1]))
+    #             p2 = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
+    #             cv2.rectangle(img, p1, p2, (10, 255, 100), 2)
+    #
+    #         else:
+    #             print("[ERROR]: KCF Lost, detectCntr: ", detectCntr)
+    #             kcfTracker = False
+    #             nnDetection = True
+    #
+    # if detectCntr == 10:
+    #     nnDetection = True
+    #     kcfTracker = False
+    #     detectCntr = 0
+    #
+    # detectCntr += 1
+    # noBird += 1
+    #
+    # # statistic update
+    # if noBird == 3:
+    #     if (sessionTable == 0).all():
+    #         noBird = 0
+    #     else:
+    #         ts = time.time()
+    #         local = []
+    #         statisticTable.append([classNames[sessionTable.argmax()], str(int(ts))])
+    #
+    #         noBird = 0
+    #         sessionTable = np.zeros(classesNumber)
+    #
     fps.update()
     fps.stop()
     cv2.putText(img, "FPS: " + str(fps.fps()), (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
@@ -209,18 +209,18 @@ while (cap.isOpened()):
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     detections = None
-
-    nowTime = time.time()
-    if nowTime - startTime > 20:
-        startTime = time.time()
-        sep = ","
-        with open('statistic.csv', 'a') as f:
-            writer = csv.writer(f)
-            for row in statisticTable:
-                print(row)
-                writer.writerow(row)
-
-        statisticTable = []
+    #
+    # nowTime = time.time()
+    # if nowTime - startTime > 20:
+    #     startTime = time.time()
+    #     sep = ","
+    #     with open('statistic.csv', 'a') as f:
+    #         writer = csv.writer(f)
+    #         for row in statisticTable:
+    #             print(row)
+    #             writer.writerow(row)
+    #
+    #     statisticTable = []
 
 cap.release()
 cv2.destroyAllWindows()
