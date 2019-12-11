@@ -2,7 +2,6 @@ import numpy as np
 import time
 import cv2
 from imutils.video import FPS
-import queue
 import os
 import json
 from keras.models import load_model
@@ -27,11 +26,6 @@ COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 
 modelsPath = os.getcwd() + "/model"
 modelPath = os.path.join(modelsPath, "ai_nimals_finetuned_vgg16.model")
-
-# init background process.
-print("[INFO] init queues...")
-inputQueue = queue.Queue(maxsize=1)
-outputQueue = queue.Queue(maxsize=1)
 
 # load videofile or load camera interface
 print("[INFO] loading video file...")
