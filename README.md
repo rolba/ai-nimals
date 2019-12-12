@@ -28,7 +28,7 @@ https://ai-experiments.com/model-training-in-keras-and-python/
 
 
 <b> 7. ai_nimals_app.py</b><br>
-This is main application. This application is using VGG16 network. So far I have to add some modifications and describe it on my blog.<br>
+This is main application. This application is using VGG16 network. It was previously ran on Nvidia Jetson TX2. I get rid of that platform and now I use my old GTX1060 to run it. Description is in progress.<br>
 
 Helpers:
 <br>
